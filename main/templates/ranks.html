@@ -1,0 +1,137 @@
+{% extends "index.html" %}
+
+{% block title %}RANKS | NSUT NCC{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='ranks.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+  <section class="rank-container">
+    <h1 class="rank-title">NCC Rank Structure</h1>
+
+    <!-- ANO -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
+
+        <h3>ANO</h3>
+        <p>Amit Sanger</p>
+      </div>
+    </div>
+
+    <!-- SUO -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="AShwani">
+        <h3>SUO</h3>
+        <p>Ashwani Sangwan</p>
+      </div>
+    </div>
+
+    <!-- JUOs -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Rachit mishra">
+        <h3>JUO</h3>
+        <p>Rachit Mishra</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aryan aswal">
+        <h3>JUO</h3>
+        <p>Aryan Aswalr</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Himanshu Kumar">
+        <h3>JUO</h3>
+        <p>Himanshu Kumar</p>
+      </div>
+    </div>
+    <!--CHM-->
+    <div class = "rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aman mishra">
+        <h3>CHM</h3>
+        <p>Aman mishra</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aryan kr">
+        <h3>CQMS</h3>
+        <p>Aryan Kumar</p>
+      </div>
+    </div>
+    <!-- 3rd Year SGTs -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Raj singhania">
+        <h3>SGT</h3>
+        <p>Raj singhania</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Sumit kumar">
+        <h3>SGT</h3>
+        <p>Sumit Kumar</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Rohit Khullhari">
+        <h3>SGT</h3>
+        <p>Rohit Khullhari</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Harshit Tehlan">
+        <h3>SGT</h3>
+        <p>Harshit Tehlan</p>
+      </div>
+    </div>
+
+
+    <!-- CPLs -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Mehra">
+        <h3>CPL</h3>
+        <p>H.S Mehra</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Mayank Sinha">
+        <h3>CPL</h3>
+        <p>Mayank Sinha</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Srikant">
+        <h3>CPL</h3>
+        <p>Srikant</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="H.V Gaur">
+        <h3>CPL</h3>
+        <p>H.V Gaur</p>
+      </div>
+    </div>
+
+    <!-- LCPLs -->
+    <div class="rank-row">
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aman Sharma">
+        <h3>LCPL</h3>
+        <p>Aman Sharma</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
+        <h3>LCPL</h3>
+        <p>Harsh Vats</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Thejas">
+        <h3>LCPL</h3>
+        <p>Thejas</p>
+      </div>
+      <div class="rank-card">
+        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
+        <h3>LCPL</h3>
+        <p>Yashvardhan Rathore</p>
+      </div>
+    </div>
+  </section>
+{%endblock%}

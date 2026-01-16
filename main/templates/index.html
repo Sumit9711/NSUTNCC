@@ -1,0 +1,78 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}NSUT NCC{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="{{ url_for('home') }}" class="brand">NSUT NCC</a>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a></li>
+        <li><a href="{{ url_for('uniform') }}" class="{% if active_page == 'uniform' %}active{% endif %}">Uniform
+            Guide</a></li>
+        <li><a href="{{ url_for('ranks') }}" class="{% if active_page == 'ranks' %}active{% endif %}">Ranks</a></li>
+        <li><a href="{{ url_for('cadets') }}" class="{% if active_page == 'cadets' %}active{% endif %}">Cadets</a></li>
+        <li><a href="{{ url_for('attendance') }}" class="{% if active_page == 'attendance' %}active{% endif %}">Attendance</a></li>
+        <li><a href="{{ url_for('events') }}" class="{% if active_page == 'events' %}active{% endif %}">Events</a></li>
+        <li><a href="{{ url_for('drills') }}" class="{% if active_page == 'drills' %}active{% endif %}">Drills</a></li>
+        <li><a href="{{ url_for('camps') }}" class="{% if active_page == 'camps' %}active{% endif %}">Camps</a></li>
+        <li><a href="{{ url_for('contact') }}" class="{% if active_page == 'contact' %}active{% endif %}">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+</body>
+
+</html>
+
+{%if active_page == 'home'%}
+<!-- Hero Section -->
+<header class="hero">
+  <div class="hero-text">
+    <h1>Welcome to NSUT NCC Defense Hub</h1>
+    <p>Empowering NSUT cadets to lead, serve, and succeed</p>
+  </div>
+  <div class="hero-image">
+    <img src="{{ url_for('static', filename='NCC.jpg') }}" alt="RDC Commander" />
+  </div>
+</header>
+
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container footer-container">
+    <p>© 2025 NSUT NCC Defense Hub</p>
+    <div class="social-links">
+      <a href="https://www.instagram.com/nsut_ncc" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
+        <img src="{{ url_for('static', filename='instagram.png') }}" alt="Instagram" />
+      </a>
+      <a href="https://x.com/NCC_NSUT?t=c6yhH4XVMc1-z9qkqbKn7g&s=08" target="_blank" aria-label="Twitter"
+        rel="noopener noreferrer">
+        <img src="{{ url_for('static', filename='twitter.png') }}" alt="Twitter" />
+      </a>
+      <a href="https://www.linkedin.com/company/national-cadet-corps-nsut/?viewAsMember=true" target="_blank"
+        aria-label="LinkedIn" rel="noopener noreferrer">
+        <img src="{{ url_for('static', filename='linkedin.png') }}" alt="LinkedIn" />
+      </a>
+    </div>
+  </div>
+</footer>
+{%endif %}
+
+</body>
+
+</html>
