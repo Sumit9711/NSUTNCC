@@ -1,64 +1,88 @@
-<!-- base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}NSUT NCC Defense Hub{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container">
-      <a href="{{ url_for('home') }}" class="brand">NSUT NCC</a>
-      <ul class="nav-links">
-        <li><a href="{{ url_for('home') }}"
-               class="{% if active_page == 'home' %}active{% endif %}">Home</a></li>
-        <li><a href="{{ url_for('uniform') }}"
-               class="{% if active_page == 'uniform' %}active{% endif %}">Uniform Guide</a></li>
-        <li><a href="{{ url_for('ranks') }}"
-               class="{% if active_page == 'ranks' %}active{% endif %}">Ranks</a></li>
-        <li><a href="{{ url_for('cadets') }}"
-               class="{% if active_page == 'cadets' %}active{% endif %}">Cadets</a></li>
-        <li><a href="{{ url_for('attendance') }}"
-               class="{% if active_page == 'attendance' %}active{% endif %}">Attendance</a></li>
-        <li><a href="{{ url_for('events') }}"
-               class="{% if active_page == 'events' %}active{% endif %}">Events</a></li>
-        <li><a href="{{ url_for('drills') }}"
-               class="{% if active_page == 'drills' %}active{% endif %}">Drills</a></li>
-        <li><a href="{{ url_for('camps') }}"
-               class="{% if active_page == 'camps' %}active{% endif %}">Camps</a></li>
-        <li><a href="{{ url_for('contact') }}"
-               class="{% if active_page == 'contact' %}active{% endif %}">Contact</a></li>
 
-        <!-- Admin section entry (single) -->
-        <li><a href="{{ url_for('admin_dashboard') }}"
-               class="{% if active_page == 'admin' %}active{% endif %}">Admin</a></li>
+  <!-- Ambient background orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="mainNav">
+    <div class="nav-container">
+      <a href="{{ url_for('home') }}" class="brand">
+        <span class="brand-icon">⚔</span>
+        <span class="brand-text">NSUT NCC</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="{{ url_for('home') }}" class="nav-link {% if active_page == 'home' %}active{% endif %}">
+          <span class="nav-icon">🏠</span><span>Home</span></a></li>
+        <li><a href="{{ url_for('uniform') }}" class="nav-link {% if active_page == 'uniform' %}active{% endif %}">
+          <span class="nav-icon">👔</span><span>Uniform</span></a></li>
+        <li><a href="{{ url_for('ranks') }}" class="nav-link {% if active_page == 'ranks' %}active{% endif %}">
+          <span class="nav-icon">🎖</span><span>Ranks</span></a></li>
+        <li><a href="{{ url_for('cadets') }}" class="nav-link {% if active_page == 'cadets' %}active{% endif %}">
+          <span class="nav-icon">👥</span><span>Cadets</span></a></li>
+        <li><a href="{{ url_for('attendance') }}" class="nav-link {% if active_page == 'attendance' %}active{% endif %}">
+          <span class="nav-icon">📋</span><span>Attendance</span></a></li>
+        <li><a href="{{ url_for('events') }}" class="nav-link {% if active_page == 'events' %}active{% endif %}">
+          <span class="nav-icon">📅</span><span>Events</span></a></li>
+        <li><a href="{{ url_for('drills') }}" class="nav-link {% if active_page == 'drills' %}active{% endif %}">
+          <span class="nav-icon">🪖</span><span>Drills</span></a></li>
+        <li><a href="{{ url_for('camps') }}" class="nav-link {% if active_page == 'camps' %}active{% endif %}">
+          <span class="nav-icon">⛺</span><span>Camps</span></a></li>
+        <li><a href="{{ url_for('contact') }}" class="nav-link {% if active_page == 'contact' %}active{% endif %}">
+          <span class="nav-icon">📞</span><span>Contact</span></a></li>
+        <li><a href="{{ url_for('admin_dashboard') }}" class="nav-link nav-admin {% if active_page == 'admin' %}active{% endif %}">
+          <span class="nav-icon">⚙</span><span>Admin</span></a></li>
       </ul>
     </div>
   </nav>
 
-  {% block content %}{% endblock %}
+  <!-- Page content with transition wrapper -->
+  <main class="page-main" id="pageMain">
+    {% block content %}{% endblock %}
+  </main>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container footer-container">
-      <p>© 2025 NSUT NCC Defense Hub</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-icon">⚔</span>
+        <span>NSUT NCC Defense Hub</span>
+      </div>
+      <p class="footer-copy">© 2025 NSUT NCC · Unity & Discipline</p>
       <div class="social-links">
-        <a href="https://www.instagram.com/nsut_ncc" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/nsut_ncc" target="_blank" aria-label="Instagram" rel="noopener noreferrer" class="social-btn">
           <img src="{{ url_for('static', filename='instagram.png') }}" alt="Instagram" />
         </a>
-        <a href="https://x.com/NCC_NSUT?t=c6yhH4XVMc1-z9qkqbKn7g&s=08" target="_blank" aria-label="Twitter" rel="noopener noreferrer">
+        <a href="https://x.com/NCC_NSUT" target="_blank" aria-label="Twitter" rel="noopener noreferrer" class="social-btn">
           <img src="{{ url_for('static', filename='twitter.png') }}" alt="Twitter" />
         </a>
-        <a href="https://www.linkedin.com/company/national-cadet-corps-nsut/?viewAsMember=true" target="_blank" aria-label="LinkedIn" rel="noopener noreferrer">
+        <a href="https://www.linkedin.com/company/national-cadet-corps-nsut/" target="_blank" aria-label="LinkedIn" rel="noopener noreferrer" class="social-btn">
           <img src="{{ url_for('static', filename='linkedin.png') }}" alt="LinkedIn" />
         </a>
-        </div>
-      <!-- social links same as your index -->
+      </div>
     </div>
   </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,127 @@
+{% extends "index.html" %}
+{% block title %}{{ camp_name }} Gallery | NSUT NCC{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/camps.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="gallery-page" id="galleryPage">
+
+  <header class="gallery-header">
+    <div class="header-grid-lines" aria-hidden="true"></div>
+    <div class="header-inner">
+      <a href="{{ url_for('camps') }}" class="back-btn" aria-label="Back to camps">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 10H4M4 10L9 5M4 10L9 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>All Camps</span>
+      </a>
+      <div class="header-text">
+        <p class="header-eyebrow">CAMP GALLERY — FIELD DOCUMENTATION</p>
+        <h1 class="header-title">{{ camp_name }}</h1>
+        <p class="header-subtitle">{{ images|length }} photographs on record</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-chip">
+          <span class="stat-value">{{ images|length }}</span>
+          <span class="stat-label">PHOTOS</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="gallery-wrapper">
+    {% if images %}
+
+      {# Build the full URL list for the JS lightbox #}
+      {% set ns = namespace(url_list=[]) %}
+      {% for img in images %}
+        {% set ns.url_list = ns.url_list + [url_for('static', filename='images/camps/' + camp_folder + '/' + img)] %}
+      {% endfor %}
+
+      <div class="masonry-grid" id="masonryGrid"
+           data-images="{{ ns.url_list | tojson }}">
+
+        {% for img in images %}
+        <div class="masonry-item reveal-card" style="--card-index: {{ loop.index0 }};">
+          <div class="img-wrap">
+            <img
+              src="{{ url_for('static', filename='images/camps/' + camp_folder + '/' + img) }}"
+              alt="Camp photo {{ loop.index }}"
+              class="gallery-img"
+              loading="lazy"
+              data-index="{{ loop.index0 }}">
+            <div class="img-hover-overlay">
+              <div class="img-hover-inner">
+                <div class="img-pin-badge" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C5.24 0 3 2.24 3 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5zm0 7.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                </div>
+                <div class="img-zoom-icon" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M7 9H11M9 7V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="img-vignette" aria-hidden="true"></div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+
+    {% else %}
+      <div class="camps-empty">
+        <div class="empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="48" height="48" rx="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 32h48M32 8v48" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+          </svg>
+        </div>
+        <h2>No images yet</h2>
+        <p>Add image files to <code>static/images/camps/{{ camp_folder }}/</code></p>
+      </div>
+    {% endif %}
+  </main>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13 5L7 10L13 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div class="lightbox-img-wrap" id="lightboxImgWrap">
+    <img src="" alt="" class="lightbox-img" id="lightboxImg">
+  </div>
+
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 5L13 10L7 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div class="lightbox-counter" id="lightboxCounter" aria-live="polite"></div>
+</div>
+
+<script src="{{ url_for('static', filename='js/camps-gallery.js') }}"></script>
+{% endblock %}

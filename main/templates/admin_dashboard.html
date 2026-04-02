@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard | NSUT NCC{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+  max-width: 1100px; margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+.admin-header { margin-bottom: 3rem; }
+.admin-eyebrow {
+  display: inline-block;
+  background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold); padding: 3px 14px; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.admin-title {
+  font-family: 'Rajdhani', sans-serif; font-size: 2.5rem; font-weight: 700;
+  color: var(--cream); letter-spacing: 1.5px;
+}
+.admin-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+.admin-tool-card {
+  display: flex; flex-direction: column; gap: 0.8rem;
+  padding: 1.8rem 1.6rem;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg); text-decoration: none;
+  color: inherit; backdrop-filter: blur(10px);
+  transition: all var(--transition);
+}
+.admin-tool-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201,168,76,0.35);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+.tool-icon { font-size: 2.4rem; }
+.tool-title {
+  font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; font-weight: 700;
+  color: var(--cream); letter-spacing: 0.5px;
+}
+.tool-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+.tool-tag {
+  display: inline-block;
+  background: rgba(61,139,61,0.12); color: var(--army-light);
+  border: 1px solid rgba(61,139,61,0.25); border-radius: 999px;
+  padding: 2px 10px; font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; width: fit-content;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-header" data-animate="fade-up">
+    <div class="admin-eyebrow">Administration</div>
+    <h1 class="admin-title">Admin Dashboard</h1>
+  </div>
+
+  <div class="admin-grid">
+    <a href="{{ url_for('nominal_roll') }}" class="admin-tool-card" data-animate="fade-up">
+      <div class="tool-icon">📊</div>
+      <div class="tool-title">Nominal Roll Generator</div>
+      <p class="tool-desc">Upload cadet Excel, select columns, choose cadets, sort by rank or DLI seniority, and download a styled nominal roll.</p>
+      <span class="tool-tag">Excel Tool</span>
+    </a>
+
+    <div class="admin-tool-card" data-animate="fade-up" data-delay="100" style="cursor:default;opacity:0.6;">
+      <div class="tool-icon">📋</div>
+      <div class="tool-title">Attendance Manager</div>
+      <p class="tool-desc">Mark and review parade attendance. Coming soon.</p>
+      <span class="tool-tag">Coming Soon</span>
+    </div>
+
+    <div class="admin-tool-card" data-animate="fade-up" data-delay="200" style="cursor:default;opacity:0.6;">
+      <div class="tool-icon">👤</div>
+      <div class="tool-title">Add / Edit Cadet</div>
+      <p class="tool-desc">Add new cadets or update existing records in the database. Coming soon.</p>
+      <span class="tool-tag">Coming Soon</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

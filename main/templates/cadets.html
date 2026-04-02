@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 {% block title %}Cadets | NSUT NCC{% endblock %}
 
 {% block extra_css %}
@@ -8,50 +8,70 @@
 {% block content %}
 <div class="cadet-page">
 
-  <!-- Year selector cards -->
-  <div class="year-grid">
-    <!-- ALL card: highlighted only when no year is selected -->
-    <a href="{{ url_for('cadets', year = 'all')}}" class="year-card {% if selected_year == 'all' %}selected{% endif %}" aria-label="Show all cadets">
-      <img class="cover" src="{{ url_for('static', filename='allyr.jpeg') }}" alt="All years">
-      <div class="label">All</div>
-    </a>
+  <!-- Header -->
+  <div class="cadet-header" data-animate="fade-up">
+    <span class="cadet-eyebrow">Battalion Roster</span>
+    <h1 class="cadet-title">Our Cadets</h1>
+    <p class="cadet-subtitle">Select a year to view the cadet roster</p>
+  </div>
 
-    <!-- 1st year -->
-    <a href="{{ url_for('cadets', year='1') }}" class="year-card {% if selected_year == '1' %}selected{% endif %}" aria-label="Show 1st year cadets">
+  <!-- Year selector cards -->
+  <div class="year-grid" data-animate="fade-up" data-delay="100">
+    <a href="{{ url_for('cadets', year='all') }}"
+       class="year-card {% if selected_year == 'all' %}selected{% endif %}"
+       aria-label="Show all cadets">
+      <img class="cover" src="{{ url_for('static', filename='allyr.jpeg') }}" alt="All years">
+      <div class="label">All Years</div>
+    </a>
+    <a href="{{ url_for('cadets', year='1') }}"
+       class="year-card {% if selected_year == '1' %}selected{% endif %}"
+       aria-label="1st year">
       <img class="cover" src="{{ url_for('static', filename='2ndyr.jpeg') }}" alt="1st year">
       <div class="label">1st Year</div>
     </a>
-
-    <!-- 2nd year -->
-    <a href="{{ url_for('cadets', year='2') }}" class="year-card {% if selected_year == '2' %}selected{% endif %}" aria-label="Show 2nd year cadets">
+    <a href="{{ url_for('cadets', year='2') }}"
+       class="year-card {% if selected_year == '2' %}selected{% endif %}"
+       aria-label="2nd year">
       <img class="cover" src="{{ url_for('static', filename='1styr.jpeg') }}" alt="2nd year">
       <div class="label">2nd Year</div>
     </a>
-
-    <!-- 3rd year -->
-    <a href="{{ url_for('cadets', year='3') }}" class="year-card {% if selected_year == '3' %}selected{% endif %}" aria-label="Show 3rd year cadets">
+    <a href="{{ url_for('cadets', year='3') }}"
+       class="year-card {% if selected_year == '3' %}selected{% endif %}"
+       aria-label="3rd year">
       <img class="cover" src="{{ url_for('static', filename='3rdyr.jpeg') }}" alt="3rd year">
       <div class="label">3rd Year</div>
     </a>
   </div>
 
-  {# Show a hint when no year is chosen #}
   {% if selected_year is none %}
-    <div class="hint" style="max-width:1100px;margin:18px auto;padding:18px;background:#fffef6;border-radius:8px;color:#333;text-align:center;">
+    <div class="hint-box glass-card" data-animate="fade-up" data-delay="200">
+      <span class="hint-icon">👆</span>
       <strong>Select a year</strong> to view cadets for that batch.
     </div>
   {% else %}
-    {# If a year is selected, show the table (or a 'no cadets' message) #}
     {% if cadets and cadets|length > 0 %}
-      <div class="table-wrapper" style="max-width:1200px;margin:12px auto;">
-        <table class="cadet-table" role="table" aria-label="Cadet list for year {{ selected_year }}">
+      <!-- Table controls -->
+      <div class="table-controls glass-card" data-animate="fade-up" data-delay="150">
+        <div class="table-meta">
+          <span class="table-count">{{ cadets|length }} cadet{{ 's' if cadets|length != 1 }}</span>
+          {% if selected_year == 'all' %}<span class="table-year-badge">All Years</span>
+          {% else %}<span class="table-year-badge">Year {{ selected_year }}</span>{% endif %}
+        </div>
+        <div class="table-search-wrap">
+          <span>🔍</span>
+          <input type="text" id="tableSearch" placeholder="Search cadets…" class="table-search">
+        </div>
+      </div>
+
+      <div class="table-wrapper glass-card" data-animate="fade-up" data-delay="200">
+        <table class="cadet-table" id="cadetTable">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>#</th>
               <th>DLI No</th>
               <th>Rank</th>
               <th>Name</th>
-              <th>Phone No</th>
+              <th>Phone</th>
               <th>Email</th>
               <th>Unit</th>
               <th>College</th>
@@ -61,7 +81,7 @@
           <tbody>
             {% for c in cadets %}
             <tr>
-              <td>{{ c.id }}</td>
+              <td>{{ loop.index }}</td>
               <td class="mono">{{ c.dli }}</td>
               <td>{{ c._rank }}</td>
               <td>{{ c.name }}</td>
@@ -69,18 +89,34 @@
               <td class="email-cell">{{ c.email }}</td>
               <td>{{ c.unit }}</td>
               <td>{{ c.college }}</td>
-              <td>{{ c.year }}</td>
+              <td><span class="year-badge">{{ c.year }}</span></td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     {% else %}
-      <div class="empty-msg" style="max-width:1100px;margin:18px auto;padding:18px;background:#fffef6;border-radius:8px;color:#333;text-align:center;">
+      <div class="hint-box glass-card" data-animate="fade-up" data-delay="200">
+        <span class="hint-icon">🔍</span>
         No cadets found for <strong>year {{ selected_year }}</strong>.
       </div>
     {% endif %}
   {% endif %}
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Live table search
+  const search = document.getElementById('tableSearch');
+  if (search) {
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      document.querySelectorAll('#cadetTable tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  }
+</script>
 {% endblock %}

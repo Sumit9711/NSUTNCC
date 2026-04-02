@@ -1,78 +1,81 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}NSUT NCC Defense Hub{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
 
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}NSUT NCC{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  {% block extra_css %}{% endblock %}
-</head>
-
-<body>
-  <nav class="navbar">
-    <div class="container">
-      <a href="{{ url_for('home') }}" class="brand">NSUT NCC</a>
-      <ul class="nav-links">
-        <li><a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a></li>
-        <li><a href="{{ url_for('uniform') }}" class="{% if active_page == 'uniform' %}active{% endif %}">Uniform
-            Guide</a></li>
-        <li><a href="{{ url_for('ranks') }}" class="{% if active_page == 'ranks' %}active{% endif %}">Ranks</a></li>
-        <li><a href="{{ url_for('cadets') }}" class="{% if active_page == 'cadets' %}active{% endif %}">Cadets</a></li>
-        <li><a href="{{ url_for('attendance') }}" class="{% if active_page == 'attendance' %}active{% endif %}">Attendance</a></li>
-        <li><a href="{{ url_for('events') }}" class="{% if active_page == 'events' %}active{% endif %}">Events</a></li>
-        <li><a href="{{ url_for('drills') }}" class="{% if active_page == 'drills' %}active{% endif %}">Drills</a></li>
-        <li><a href="{{ url_for('camps') }}" class="{% if active_page == 'camps' %}active{% endif %}">Camps</a></li>
-        <li><a href="{{ url_for('contact') }}" class="{% if active_page == 'contact' %}active{% endif %}">Contact</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  {% block content %}{% endblock %}
-</body>
-
-</html>
-
-{%if active_page == 'home'%}
+{% block content %}
 <!-- Hero Section -->
-<header class="hero">
-  <div class="hero-text">
-    <h1>Welcome to NSUT NCC Defense Hub</h1>
-    <p>Empowering NSUT cadets to lead, serve, and succeed</p>
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-content">
+    <div class="hero-text" data-animate="fade-up">
+      <div class="hero-badge">National Cadet Corps · NSUT</div>
+      <h1 class="hero-title">
+        <span class="hero-title-line">NSUT NCC</span>
+        <span class="hero-title-sub">Defense Hub</span>
+      </h1>
+      <p class="hero-desc">Empowering NSUT cadets to lead, serve, and succeed. One battalion, one spirit.</p>
+      <div class="hero-cta">
+        <a href="{{ url_for('cadets') }}" class="btn-primary">View Cadets</a>
+        <a href="{{ url_for('ranks') }}" class="btn-ghost">Our Ranks</a>
+      </div>
+    </div>
+    <div class="hero-visual" data-animate="fade-in">
+      <div class="hero-img-wrapper">
+        <img src="{{ url_for('static', filename='NCC.jpg') }}" alt="NSUT NCC" />
+        <div class="hero-img-glow"></div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-chip"><span class="stat-num">3</span><span class="stat-label">Years</span></div>
+        <div class="stat-chip"><span class="stat-num">∞</span><span class="stat-label">Spirit</span></div>
+        <div class="stat-chip"><span class="stat-num">1</span><span class="stat-label">Battalion</span></div>
+      </div>
+    </div>
   </div>
-  <div class="hero-image">
-    <img src="{{ url_for('static', filename='NCC.jpg') }}" alt="RDC Commander" />
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
   </div>
-</header>
+</section>
 
-
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="container footer-container">
-    <p>© 2025 NSUT NCC Defense Hub</p>
-    <div class="social-links">
-      <a href="https://www.instagram.com/nsut_ncc" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
-        <img src="{{ url_for('static', filename='instagram.png') }}" alt="Instagram" />
+<!-- Quick Nav Cards -->
+<section class="quick-nav">
+  <div class="qn-container">
+    <h2 class="section-title" data-animate="fade-up">Quick Access</h2>
+    <div class="qn-grid">
+      <a href="{{ url_for('cadets') }}" class="qn-card" data-animate="fade-up" data-delay="0">
+        <div class="qn-icon">👥</div>
+        <h3>Cadets</h3>
+        <p>Browse all cadets by year</p>
       </a>
-      <a href="https://x.com/NCC_NSUT?t=c6yhH4XVMc1-z9qkqbKn7g&s=08" target="_blank" aria-label="Twitter"
-        rel="noopener noreferrer">
-        <img src="{{ url_for('static', filename='twitter.png') }}" alt="Twitter" />
+      <a href="{{ url_for('ranks') }}" class="qn-card" data-animate="fade-up" data-delay="100">
+        <div class="qn-icon">🎖</div>
+        <h3>Ranks</h3>
+        <p>Rank holders & hierarchy</p>
       </a>
-      <a href="https://www.linkedin.com/company/national-cadet-corps-nsut/?viewAsMember=true" target="_blank"
-        aria-label="LinkedIn" rel="noopener noreferrer">
-        <img src="{{ url_for('static', filename='linkedin.png') }}" alt="LinkedIn" />
+      <a href="{{ url_for('uniform') }}" class="qn-card" data-animate="fade-up" data-delay="200">
+        <div class="qn-icon">👔</div>
+        <h3>Uniform</h3>
+        <p>Complete uniform guide</p>
+      </a>
+      <a href="{{ url_for('attendance') }}" class="qn-card" data-animate="fade-up" data-delay="300">
+        <div class="qn-icon">📋</div>
+        <h3>Attendance</h3>
+        <p>Track parade attendance</p>
+      </a>
+      <a href="{{ url_for('events') }}" class="qn-card" data-animate="fade-up" data-delay="400">
+        <div class="qn-icon">📅</div>
+        <h3>Events</h3>
+        <p>Upcoming NCC events</p>
+      </a>
+      <a href="{{ url_for('admin_dashboard') }}" class="qn-card qn-card-admin" data-animate="fade-up" data-delay="500">
+        <div class="qn-icon">⚙</div>
+        <h3>Admin Tools</h3>
+        <p>Nominal roll & more</p>
       </a>
     </div>
   </div>
-</footer>
-{%endif %}
-
-</body>
-
-</html>
+</section>
+{% endblock %}

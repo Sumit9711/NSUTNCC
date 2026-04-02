@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+{% block title %}Camps | NSUT NCC{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/camps.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="camps-page" id="campsPage">
+
+  <header class="camps-header">
+    <div class="header-grid-lines" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="header-badge">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z"
+            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <p class="header-eyebrow">NSUT NCC — FIELD OPERATIONS</p>
+        <h1 class="header-title">CAMP ARCHIVES</h1>
+        <p class="header-subtitle">Select a camp to view the full gallery</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-chip">
+          <span class="stat-value">{{ camps|length }}</span>
+          <span class="stat-label">CAMPS</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="camps-grid-wrapper">
+    {% if camps %}
+      <div class="camps-grid" id="campsGrid">
+        {% for camp in camps %}
+        <a href="{{ url_for('camp_gallery', camp_name=camp.folder) }}"
+           class="camp-card reveal-card"
+           style="--card-index: {{ loop.index0 }};"
+           aria-label="Open {{ camp.name }} gallery">
+
+          <div class="card-img-wrap">
+            {% if camp.cover_file %}
+              <img
+                src="{{ url_for('static', filename='images/camps/' + camp.folder + '/' + camp.cover_file) }}"
+                alt="{{ camp.name }} camp"
+                class="card-img"
+                loading="lazy">
+            {% else %}
+              <div class="card-img-placeholder">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 38L18 22L26 30L32 22L42 38H6Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="34" cy="16" r="4" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </div>
+            {% endif %}
+            <div class="card-img-overlay"></div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-badge" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1l1.5 4.5H15l-4 3 1.5 4.5L8 10.5 3.5 13l1.5-4.5-4-3h5.5z"/>
+              </svg>
+            </div>
+            <div class="card-text">
+              <h2 class="card-name">{{ camp.name }}</h2>
+              <p class="card-count">{{ camp.count }} PHOTOS</p>
+            </div>
+            <div class="card-arrow" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="card-corner-accent" aria-hidden="true"></div>
+        </a>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="camps-empty">
+        <div class="empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="48" height="48" rx="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 32h48M32 8v48" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+          </svg>
+        </div>
+        <h2>No camps found</h2>
+        <p>Add folders under <code>static/images/camps/</code> to populate this page automatically.</p>
+      </div>
+    {% endif %}
+  </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/camps-gallery.js') }}"></script>
+{% endblock %}

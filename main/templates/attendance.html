@@ -1,0 +1,272 @@
+{% extends "index.html" %}
+{% block title %}Attendance | NSUT NCC{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/attendance.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="att-page" id="attPage">
+
+  <!-- ── HEADER ────────────────────────────────────────────── -->
+  <header class="att-header">
+    <div class="att-header-grid" aria-hidden="true"></div>
+    <div class="att-header-inner">
+      <div>
+        <p class="att-eyebrow">NSUT NCC — ADMIN PANEL</p>
+        <h1 class="att-title">ATTENDANCE</h1>
+        <p class="att-subtitle">Select year → month → session to manage attendance</p>
+      </div>
+      <div class="att-header-chips" id="headerChips">
+        <div class="hchip" id="hchipYear">—</div>
+        <div class="hchip-sep">›</div>
+        <div class="hchip" id="hchipMonth">—</div>
+        <div class="hchip-sep">›</div>
+        <div class="hchip" id="hchipSession">—</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── STEP BAR ──────────────────────────────────────────── -->
+  <div class="att-stepbar">
+    <div class="att-stepbar-inner">
+      <div class="step-item active" data-step="1">
+        <div class="step-circle">1</div><span>Year</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="2">
+        <div class="step-circle">2</div><span>Month</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="3">
+        <div class="step-circle">3</div><span>Session</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="4">
+        <div class="step-circle">4</div><span>Mark</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="5">
+        <div class="step-circle">5</div><span>Analytics</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="att-body">
+
+    <!-- ══════════════════════════════════════════════════════
+         STEP 1 — YEAR SELECTION
+    ══════════════════════════════════════════════════════ -->
+    <section class="att-section active" id="step1">
+      <h2 class="section-title">SELECT YEAR</h2>
+      <div class="year-grid">
+        <button class="year-card" data-year="1">
+          <div class="year-card-num">1</div>
+          <div class="year-card-label">st Year</div>
+          <div class="year-card-sub">BATCH I</div>
+        </button>
+        <button class="year-card" data-year="2">
+          <div class="year-card-num">2</div>
+          <div class="year-card-label">nd Year</div>
+          <div class="year-card-sub">BATCH II</div>
+        </button>
+        <button class="year-card" data-year="3">
+          <div class="year-card-num">3</div>
+          <div class="year-card-label">rd Year</div>
+          <div class="year-card-sub">BATCH III</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         STEP 2 — MONTH SELECTION
+    ══════════════════════════════════════════════════════ -->
+    <section class="att-section" id="step2">
+      <div class="section-header-row">
+        <h2 class="section-title">SELECT MONTH</h2>
+        <button class="back-btn" onclick="goToStep(1)">← Back</button>
+      </div>
+      <div class="month-cal-wrap">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" id="calPrev">&#8592;</button>
+          <span class="cal-current" id="calLabel"></span>
+          <button class="cal-nav-btn" id="calNext">&#8594;</button>
+        </div>
+        <div class="month-grid" id="monthGrid"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         STEP 3 — SESSION MANAGEMENT
+    ══════════════════════════════════════════════════════ -->
+    <section class="att-section" id="step3">
+      <div class="section-header-row">
+        <h2 class="section-title">CLASS SESSIONS</h2>
+        <button class="back-btn" onclick="goToStep(2)">← Back</button>
+      </div>
+
+      <!-- Add new session -->
+      <div class="glass-card add-session-card">
+        <h3 class="card-label">ADD NEW SESSION</h3>
+        <div class="add-session-form">
+          <input type="date" id="newSessionDate" class="att-input" placeholder="Select date">
+          <input type="text" id="newSessionNotes" class="att-input" placeholder="Notes (optional)">
+          <button class="att-btn-primary" id="addSessionBtn">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            ADD SESSION
+          </button>
+        </div>
+        <p class="form-msg" id="addSessionMsg"></p>
+      </div>
+
+      <!-- Sessions list -->
+      <div class="glass-card">
+        <div class="sessions-list-header">
+          <h3 class="card-label">SESSIONS THIS MONTH</h3>
+          <span class="sessions-count-badge" id="sessionsCountBadge">0 sessions</span>
+        </div>
+        <div class="sessions-list" id="sessionsList">
+          <div class="empty-state">No sessions yet for this month.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         STEP 4 — MARK ATTENDANCE
+    ══════════════════════════════════════════════════════ -->
+    <section class="att-section" id="step4">
+      <div class="section-header-row">
+        <h2 class="section-title">MARK ATTENDANCE</h2>
+        <button class="back-btn" onclick="goToStep(3)">← Back</button>
+      </div>
+
+      <div class="mark-header-bar glass-card">
+        <div class="mark-info">
+          <span class="mark-info-label">SESSION DATE</span>
+          <span class="mark-info-val" id="markSessionDate">—</span>
+        </div>
+        <div class="mark-info">
+          <span class="mark-info-label">YEAR</span>
+          <span class="mark-info-val" id="markYear">—</span>
+        </div>
+        <div class="mark-stats">
+          <div class="mstat green" id="mstatPresent">
+            <span class="mstat-num" id="presentCount">0</span>
+            <span class="mstat-lbl">PRESENT</span>
+          </div>
+          <div class="mstat red" id="mstatAbsent">
+            <span class="mstat-num" id="absentCount">0</span>
+            <span class="mstat-lbl">ABSENT</span>
+          </div>
+          <div class="mstat gold">
+            <span class="mstat-num" id="totalCount">0</span>
+            <span class="mstat-lbl">TOTAL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk actions -->
+      <div class="bulk-actions">
+        <button class="bulk-btn" id="markAllPresent">✓ Mark All Present</button>
+        <button class="bulk-btn outline" id="markAllAbsent">✗ Mark All Absent</button>
+      </div>
+
+      <!-- Cadet list -->
+      <div class="cadet-att-list" id="cadetAttList">
+        <div class="empty-state">Loading cadets...</div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-row">
+        <button class="att-btn-primary large" id="submitAttBtn">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SAVE ATTENDANCE
+        </button>
+        <p class="form-msg" id="submitMsg"></p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         STEP 5 — ANALYTICS
+    ══════════════════════════════════════════════════════ -->
+    <section class="att-section" id="step5">
+      <div class="section-header-row">
+        <h2 class="section-title">ANALYTICS</h2>
+        <button class="back-btn" onclick="goToStep(3)">← Back</button>
+      </div>
+
+      <!-- Summary chips -->
+      <div class="analytics-summary" id="analyticsSummary">
+        <div class="summary-chip">
+          <span class="summary-num" id="anaTotalSessions">—</span>
+          <span class="summary-lbl">TOTAL SESSIONS</span>
+        </div>
+        <div class="summary-chip red">
+          <span class="summary-num" id="anaLowCount">—</span>
+          <span class="summary-lbl">BELOW 75%</span>
+        </div>
+        <div class="summary-chip green">
+          <span class="summary-num" id="anaTopPct">—</span>
+          <span class="summary-lbl">TOP ATTENDANCE</span>
+        </div>
+      </div>
+
+      <!-- Sort controls -->
+      <div class="analytics-controls">
+        <span class="ctrl-label">SORT BY</span>
+        <button class="sort-btn active" data-sort="pct">Attendance %</button>
+        <button class="sort-btn" data-sort="name">Name</button>
+        <div class="filter-sep"></div>
+        <span class="ctrl-label">FILTER</span>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="low">⚠ Below 75%</button>
+        <button class="filter-btn" data-filter="top">★ Toppers</button>
+      </div>
+
+      <!-- Analytics table -->
+      <div class="glass-card analytics-table-wrap">
+        <table class="analytics-table" id="analyticsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>NAME</th>
+              <th>DLI</th>
+              <th>RANK</th>
+              <th>ATTENDED</th>
+              <th>TOTAL</th>
+              <th>ATTENDANCE %</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="analyticsBody">
+            <tr><td colspan="8" class="empty-state">Select a month and year to view analytics.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /att-body -->
+
+  <!-- NAV TABS (floating bottom) -->
+  <nav class="att-tab-nav">
+    <button class="tab-btn active" data-goto="3" onclick="goToStep(3)">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+      Sessions
+    </button>
+    <button class="tab-btn" data-goto="4" onclick="goToStep(4)">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Mark
+    </button>
+    <button class="tab-btn" data-goto="5" onclick="goToStep(5)">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Analytics
+    </button>
+  </nav>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
+{% endblock %}

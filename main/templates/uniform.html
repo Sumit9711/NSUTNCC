@@ -1,98 +1,226 @@
 {% extends "index.html" %}
+{% block title %}Uniform Guide | NSUT NCC{% endblock %}
 
-{% block title %}UNIFORM GUIDE| NSUT NCC{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='uniform.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/uniform.css') }}">
 {% endblock %}
 
-
 {% block content %}
-  <!-- ranks page content here -->
+<div class="uniform-page">
 
+  <!-- ── HEADER ──────────────────────────────────────────── -->
+  <header class="uni-header">
+    <div class="uni-header-grid" aria-hidden="true"></div>
+    <div class="uni-header-inner">
+      <p class="uni-eyebrow">NSUT NCC — FIELD MANUAL</p>
+      <h1 class="uni-title">UNIFORM GUIDE</h1>
+      <p class="uni-subtitle">Hover or tap any labelled part on the figure for the wearing guide</p>
+    </div>
+  </header>
 
+  <!-- ── MAIN: photo + panel ─────────────────────────────── -->
+  <div class="uni-main">
 
- <!-- Uniform Section -->
-<section class="uniform-container">
-  <div class="uniform-image">
-    <img src="{{ url_for('static', filename='dress2.png') }}" alt="NCC Uniform" />
+    <!-- LEFT: photo with hotspot overlays -->
+    <div class="uni-diagram-wrap">
+      <div class="uni-diagram-label">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        TAP A PART
+      </div>
+
+      <!-- Photo + hotspot container -->
+      <div class="uni-photo-container" id="uniPhotoContainer">
+        <img
+          src="{{ url_for('static', filename='images/uniform_ref.png') }}"
+          alt="NCC Uniform Reference"
+          class="uni-photo"
+          id="uniPhoto"
+          draggable="false">
+
+        <!--
+          Hotspots: position as % of image (left%, top%)
+          Each is a small pulsing dot + label line
+          data-part matches the JS data keys
+        -->
+
+        <!-- Beret Cap — top left head area -->
+        <div class="hotspot-pin" data-part="beret" style="left:28%;top:4%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Beret Cap</div>
+        </div>
+
+        <!-- Hackle — top right of head -->
+        <div class="hotspot-pin pin-right" data-part="hackle" style="left:62%;top:2%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Hackle</div>
+        </div>
+
+        <!-- Cap Badge -->
+        <div class="hotspot-pin pin-right" data-part="capbadge" style="left:60%;top:8%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Cap Badge</div>
+        </div>
+
+        <!-- Neck Scarf -->
+        <div class="hotspot-pin" data-part="scarf" style="left:30%;top:19%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Neck Scarf</div>
+        </div>
+
+        <!-- Cadet Rank / Shoulder -->
+        <div class="hotspot-pin pin-right" data-part="shoulder" style="left:68%;top:22%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Cadet Rank</div>
+        </div>
+
+        <!-- Lanyard -->
+        <div class="hotspot-pin pin-right" data-part="lanyard" style="left:65%;top:28%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Lace Yard</div>
+        </div>
+
+        <!-- Nameplate -->
+        <div class="hotspot-pin" data-part="nameplate" style="left:28%;top:30%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Name Plate</div>
+        </div>
+
+        <!-- NCC Shield -->
+        <div class="hotspot-pin pin-right" data-part="nccshield" style="left:66%;top:34%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">NCC Shield</div>
+        </div>
+
+        <!-- Shirt -->
+        <div class="hotspot-pin" data-part="shirt" style="left:22%;top:37%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Shirt</div>
+        </div>
+
+        <!-- Shatses / Webbing -->
+        <div class="hotspot-pin pin-right" data-part="shatses" style="left:65%;top:40%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Shatses</div>
+        </div>
+
+        <!-- Belt with Buckle -->
+        <div class="hotspot-pin pin-right" data-part="belt" style="left:66%;top:46%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Belt w/ Buckle</div>
+        </div>
+
+        <!-- Jhaltan/Paltu (Flap) -->
+        <div class="hotspot-pin" data-part="jhaltan" style="left:25%;top:46%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Jhaltan/Paltu</div>
+        </div>
+
+        <!-- Kamar Band / Kumerband -->
+        <div class="hotspot-pin" data-part="kumerband" style="left:22%;top:51%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Kamar Band</div>
+        </div>
+
+        <!-- Gloves -->
+        <div class="hotspot-pin pin-right" data-part="gloves" style="left:72%;top:54%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Gloves</div>
+        </div>
+
+        <!-- Trouser -->
+        <div class="hotspot-pin" data-part="trouser" style="left:20%;top:67%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Trouser</div>
+        </div>
+
+        <!-- Spade/Anklet -->
+        <div class="hotspot-pin pin-right" data-part="spade" style="left:68%;top:80%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Spade/Anklet</div>
+        </div>
+
+        <!-- Shoe / DMS -->
+        <div class="hotspot-pin pin-right" data-part="dms" style="left:66%;top:91%;">
+          <div class="pin-dot"></div>
+          <div class="pin-line"></div>
+          <div class="pin-label">Shoe (DMS)</div>
+        </div>
+
+      </div><!-- /uni-photo-container -->
+
+      <p class="diagram-hint">↑ Tap any label to view guide</p>
+    </div>
+
+    <!-- RIGHT: info panel -->
+    <div class="uni-panel" id="uniPanel">
+
+      <!-- Default state -->
+      <div class="panel-default" id="panelDefault">
+        <div class="panel-default-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M24 16v8M24 28v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="panel-default-title">SELECT A PART</h2>
+        <p class="panel-default-sub">Click any labelled dot on the uniform photo to view the step-by-step wearing guide.</p>
+        <div class="panel-parts-list" id="partsChipList">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Detail panel -->
+      <div class="panel-detail" id="panelDetail" hidden>
+        <button class="panel-back-btn" id="panelBackBtn" aria-label="Back">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          ALL PARTS
+        </button>
+        <div class="detail-part-badge" id="detailBadge"></div>
+        <h2 class="detail-title" id="detailTitle"></h2>
+        <p class="detail-desc" id="detailDesc"></p>
+        <div class="detail-steps" id="detailSteps"></div>
+        <a class="detail-tutorial-btn" id="detailTutorialBtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M8 7l5 3-5 3V7z" fill="currentColor"/>
+          </svg>
+          WATCH TUTORIAL
+        </a>
+      </div>
+
+    </div>
   </div>
 
-  <!-- Cap -->
-  <div class="uniform-part">
-    <h3>Berret</h3>
-    <p>Proper way to wear the NCC cap with correct angle and placement.</p>
-    <a href="https://www.youtube.com/watch?v=sample1" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
+  <!-- ── ALL PARTS CARDS ──────────────────────────────────── -->
+  <section class="uni-all-parts">
+    <div class="all-parts-header reveal-item">
+      <span class="all-parts-line"></span>
+      <span class="all-parts-label">ALL PARTS QUICK ACCESS</span>
+      <span class="all-parts-line"></span>
+    </div>
+    <div class="all-parts-grid" id="allPartsGrid"></div>
+  </section>
 
-  <!-- Shoulder Badge -->
-  <div class="uniform-part">
-    <h3>Shoulder Badge</h3>
-    <p>How to correctly align and attach the shoulder badge on both sides.</p>
-    <a href="https://www.youtube.com/watch?v=sample2" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
+</div>
 
-  <!-- Lanyard -->
-  <div class="uniform-part">
-    <h3>Lanyard</h3>
-    <p>Instructions to wear the lanyard based on troop/wing with proper looping.</p>
-    <a href="https://www.youtube.com/watch?v=sample3" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Belt -->
-  <div class="uniform-part">
-    <h3>Belt</h3>
-    <p>Guide for tightening and centering the NCC belt on the uniform.</p>
-    <a href="https://www.youtube.com/watch?v=sample4" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Scarf -->
-  <div class="uniform-part">
-    <h3>Scarf</h3>
-    <p>How to neatly fold and wear the NCC scarf according to protocol.</p>
-    <a href="https://www.youtube.com/watch?v=sample5" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Sachet -->
-  <div class="uniform-part">
-    <h3>Sachet</h3>
-    <p>Proper placement and securing of the sachet on the uniform belt or shoulder.</p>
-    <a href="https://www.youtube.com/watch?v=sample6" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Nameplate -->
-  <div class="uniform-part">
-    <h3>Nameplate</h3>
-    <p>Correct positioning and fastening of the nameplate on the chest.</p>
-    <a href="https://www.youtube.com/watch?v=sample7" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Gloves -->
-  <div class="uniform-part">
-    <h3>Gloves</h3>
-    <p>When and how to wear the official NCC gloves for drill and ceremonies.</p>
-    <a href="https://www.youtube.com/watch?v=sample8" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Spade -->
-  <div class="uniform-part">
-    <h3>Spade</h3>
-    <p>Carrying and using the spade during camps and field exercises safely and correctly.</p>
-    <a href="https://www.youtube.com/watch?v=sample9" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- DMS (Drill Master's Stick) -->
-  <div class="uniform-part">
-    <h3>DMS Shoes</h3>
-    <p>How to wear dms properly.</p>
-    <a href="https://www.youtube.com/watch?v=sample10" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-
-  <!-- Kumerband (Cummerbund) -->
-  <div class="uniform-part">
-    <h3>Kumerband</h3>
-    <p>How to correctly wear and adjust the kumerband around the waist.</p>
-    <a href="https://www.youtube.com/watch?v=sample11" target="_blank" rel="noopener">Watch Tutorial</a>
-  </div>
-</section>
-
+<script src="{{ url_for('static', filename='js/uniform.js') }}"></script>
 {% endblock %}

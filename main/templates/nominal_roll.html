@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Nominal Roll Generator | NSUT NCC Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='nominal_roll.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="nr-page">
+
+  <!-- Page Header -->
+  <div class="nr-header" data-animate="fade-up">
+    <a href="{{ url_for('admin_dashboard') }}" class="nr-back">← Admin</a>
+    <div>
+      <span class="nr-eyebrow">Admin Tool</span>
+      <h1 class="nr-title">Nominal Roll Generator</h1>
+      <p class="nr-subtitle">Upload cadet list · Select cadets · Configure · Download</p>
+    </div>
+  </div>
+
+  <!-- STEP INDICATOR -->
+  <div class="nr-steps" id="stepIndicator" data-animate="fade-up" data-delay="100">
+    <div class="nr-step active" data-step="1"><span class="step-num">1</span><span class="step-label">Upload</span></div>
+    <div class="nr-step-line"></div>
+    <div class="nr-step" data-step="2"><span class="step-num">2</span><span class="step-label">Configure</span></div>
+    <div class="nr-step-line"></div>
+    <div class="nr-step" data-step="3"><span class="step-num">3</span><span class="step-label">Select</span></div>
+    <div class="nr-step-line"></div>
+    <div class="nr-step" data-step="4"><span class="step-num">4</span><span class="step-label">Generate</span></div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="nr-layout">
+
+    <!-- LEFT PANEL -->
+    <aside class="nr-sidebar glass-card" data-animate="fade-up" data-delay="150">
+
+      <!-- STEP 1: Upload -->
+      <section class="nr-panel" id="panelUpload">
+        <h2 class="panel-heading"><span class="panel-num">1</span> Upload File</h2>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+          <div class="upload-icon">📂</div>
+          <p class="upload-main">Drop your Excel / CSV here</p>
+          <p class="upload-sub">or</p>
+          <button class="btn-primary" id="uploadBtn">Browse File</button>
+          <p class="upload-formats">.xlsx · .xls · .csv</p>
+        </div>
+        <div class="upload-status" id="uploadStatus" hidden>
+          <span class="upload-file-name" id="uploadFileName"></span>
+          <span class="upload-count" id="uploadCount"></span>
+          <button class="btn-danger" id="clearFileBtn" style="margin-top:8px;">Remove File</button>
+        </div>
+      </section>
+
+      <hr class="panel-divider">
+
+      <!-- STEP 2: Column Config -->
+      <section class="nr-panel" id="panelColumns">
+        <h2 class="panel-heading"><span class="panel-num">2</span> Select Columns</h2>
+        <p class="panel-hint">Choose & order columns in the output Excel.</p>
+        <div class="col-actions">
+          <button class="btn-xs" id="selectAllCols">All</button>
+          <button class="btn-xs" id="deselectAllCols">None</button>
+        </div>
+        <div class="col-list" id="colList">
+          <p class="empty-hint">Upload a file to see columns</p>
+        </div>
+        <p class="panel-hint" style="margin-top:8px;">Drag to reorder ↕</p>
+        <label class="checkbox-row">
+          <input type="checkbox" id="serialColCheck" checked>
+          <span>Add S.No column</span>
+        </label>
+      </section>
+
+      <hr class="panel-divider">
+
+      <!-- Sort options -->
+      <section class="nr-panel">
+        <h2 class="panel-heading"><span class="panel-num">3a</span> Sort Order</h2>
+        <div class="sort-options">
+          <label class="radio-option">
+            <input type="radio" name="sortBy" value="none" checked>
+            <span class="radio-label">No Sorting</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="sortBy" value="rank">
+            <span class="radio-label">Sort by Rank <span class="hint-badge">SUO → Cadet</span></span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="sortBy" value="dli">
+            <span class="radio-label">Sort by DLI <span class="hint-badge">Senior First</span></span>
+          </label>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- RIGHT PANEL -->
+    <main class="nr-main">
+
+      <!-- STEP 3: Search + Cadet List -->
+      <section class="glass-card nr-cadet-panel" data-animate="fade-up" data-delay="200">
+        <div class="cadet-panel-header">
+          <div>
+            <h2 class="panel-heading" style="margin-bottom:4px;"><span class="panel-num">3b</span> Select Cadets</h2>
+            <p class="panel-hint">Click to toggle · <span id="selCount">0</span> selected of <span id="totalCount">0</span></p>
+          </div>
+          <div class="cadet-panel-actions">
+            <button class="btn-xs" id="selectAllCadets">Select All</button>
+            <button class="btn-xs" id="deselectAllCadets">Deselect All</button>
+          </div>
+        </div>
+
+        <!-- Search bar -->
+        <div class="nr-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="nr-search" id="cadetSearch"
+                 placeholder="Search by Name or DLI…" autocomplete="off">
+          <button class="search-clear" id="searchClear" title="Clear search" hidden>✕</button>
+        </div>
+
+        <!-- Cadet grid -->
+        <div class="cadet-grid" id="cadetGrid">
+          <div class="cadet-empty" id="cadetEmpty">
+            <div class="cadet-empty-icon">📋</div>
+            <p>Upload a file to load cadets</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4: Generate -->
+      <section class="glass-card nr-generate-panel" data-animate="fade-up" data-delay="300">
+        <div class="generate-inner">
+          <div>
+            <h2 class="panel-heading"><span class="panel-num">4</span> Generate Roll</h2>
+            <p class="panel-hint" id="generateHint">Select cadets and configure options above.</p>
+          </div>
+          <div class="generate-actions">
+            <button class="btn-gold" id="generateBtn" disabled>
+              <span>⬇</span> Generate Excel
+            </button>
+          </div>
+        </div>
+        <div class="generate-progress" id="generateProgress" hidden>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <p class="progress-label" id="progressLabel">Processing…</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/nominal_roll.js') }}"></script>
+{% endblock %}

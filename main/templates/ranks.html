@@ -1,137 +1,162 @@
 {% extends "index.html" %}
 
 {% block title %}RANKS | NSUT NCC{% endblock %}
+
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='ranks.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ranks-panel.css') }}">
 {% endblock %}
 
-
 {% block content %}
+<div class="ranks-page">
 
-  <section class="rank-container">
-    <h1 class="rank-title">NCC Rank Structure</h1>
-
-    <!-- ANO -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
-
-        <h3>ANO</h3>
-        <p>Amit Sanger</p>
+  <!-- ── PAGE HEADER ─────────────────────────────────────── -->
+  <header class="ranks-header">
+    <div class="ranks-header-bg" aria-hidden="true"></div>
+    <div class="ranks-header-inner">
+      <div class="ranks-header-text">
+        <p class="ranks-eyebrow">NSUT NCC — COMMAND STRUCTURE</p>
+        <h1 class="ranks-title">RANK PANEL</h1>
+        <p class="ranks-subtitle">Click any card to reveal details</p>
       </div>
     </div>
+  </header>
 
-    <!-- SUO -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="AShwani">
-        <h3>SUO</h3>
-        <p>Ashwani Sangwan</p>
+  <!-- ── SESSION SWITCHER ────────────────────────────────── -->
+  {% if all_sessions %}
+  <div class="session-bar-wrap">
+    <div class="session-bar">
+      <span class="session-bar-label">SESSION</span>
+      <div class="session-tabs">
+        {% for s in all_sessions %}
+        <a href="{{ url_for('ranks', session=s.label) }}"
+           class="session-tab {% if active_session and s.label == active_session.label %}active{% endif %}">
+          {{ s.label }}
+          {% if s.is_current %}
+            <span class="session-current-dot" title="Current batch"></span>
+          {% endif %}
+        </a>
+        {% endfor %}
       </div>
     </div>
+  </div>
+  {% endif %}
 
-    <!-- JUOs -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Rachit mishra">
-        <h3>JUO</h3>
-        <p>Rachit Mishra</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aryan aswal">
-        <h3>JUO</h3>
-        <p>Aryan Aswalr</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Himanshu Kumar">
-        <h3>JUO</h3>
-        <p>Himanshu Kumar</p>
-      </div>
-    </div>
-    <!--CHM-->
-    <div class = "rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aman mishra">
-        <h3>CHM</h3>
-        <p>Aman mishra</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aryan kr">
-        <h3>CQMS</h3>
-        <p>Aryan Kumar</p>
-      </div>
-    </div>
-    <!-- 3rd Year SGTs -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Raj singhania">
-        <h3>SGT</h3>
-        <p>Raj singhania</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Sumit kumar">
-        <h3>SGT</h3>
-        <p>Sumit Kumar</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Rohit Khullhari">
-        <h3>SGT</h3>
-        <p>Rohit Khullhari</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Harshit Tehlan">
-        <h3>SGT</h3>
-        <p>Harshit Tehlan</p>
-      </div>
-    </div>
+  <!-- ── RANK GRID ────────────────────────────────────────── -->
+  <main class="ranks-main">
+    {% if grouped %}
+      {% for rank_title, holders in grouped.items() %}
+      <div class="rank-row-wrap reveal-rank">
 
+        <div class="rank-tier-label">
+          <span class="rank-tier-line"></span>
+          <span class="rank-tier-name">{{ rank_title }}</span>
+          <span class="rank-tier-line"></span>
+        </div>
 
-    <!-- CPLs -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Mehra">
-        <h3>CPL</h3>
-        <p>H.S Mehra</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Mayank Sinha">
-        <h3>CPL</h3>
-        <p>Mayank Sinha</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Srikant">
-        <h3>CPL</h3>
-        <p>Srikant</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="H.V Gaur">
-        <h3>CPL</h3>
-        <p>H.V Gaur</p>
-      </div>
-    </div>
+        <div class="rank-cards-row">
+          {% for holder in holders %}
+          <!-- Flip card wrapper -->
+          <div class="flip-card" style="--i: {{ loop.index0 }}" tabindex="0"
+               role="button" aria-label="Flip card for {{ holder.name }}">
+            <div class="flip-card-inner">
 
-    <!-- LCPLs -->
-    <div class="rank-row">
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Aman Sharma">
-        <h3>LCPL</h3>
-        <p>Aman Sharma</p>
+              <!-- FRONT -->
+              <div class="flip-front">
+                <div class="rank-photo-wrap">
+                  {% if holder.photo %}
+                    <img src="{{ url_for('static', filename='images/ranks/' + holder.photo) }}"
+                         alt="{{ holder.name }}" class="rank-photo" loading="lazy">
+                  {% else %}
+                    <img src="{{ url_for('static', filename='dress2.png') }}"
+                         alt="{{ holder.name }}" class="rank-photo rank-photo-placeholder">
+                  {% endif %}
+                  <div class="rank-photo-overlay"></div>
+                </div>
+                <div class="rank-info">
+                  <div class="rank-badge-pill">{{ holder.rank_title }}</div>
+                  <h3 class="rank-name">{{ holder.name }}</h3>
+                </div>
+                <div class="flip-hint" aria-hidden="true">TAP TO REVEAL</div>
+                <div class="rank-corner" aria-hidden="true"></div>
+              </div>
+
+              <!-- BACK -->
+              <div class="flip-back">
+                <div class="flip-back-glow" aria-hidden="true"></div>
+
+                <!-- Big rank badge -->
+                <div class="back-rank-circle">
+                  <span>{{ holder.rank_title }}</span>
+                </div>
+
+                <div class="back-info">
+                  <p class="back-label">FULL NAME</p>
+                  <p class="back-value">{{ holder.name }}</p>
+
+                  <p class="back-label" style="margin-top:0.9rem">RANK</p>
+                  <p class="back-value">{{ holder.rank_title }}</p>
+
+                  {% if holder.year_batch %}
+                  <p class="back-label" style="margin-top:0.9rem">YEAR / BATCH</p>
+                  <p class="back-value">{{ holder.year_batch }}</p>
+                  {% endif %}
+
+                  {% if active_session %}
+                  <p class="back-label" style="margin-top:0.9rem">SESSION</p>
+                  <p class="back-value">{{ active_session.label }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="back-corner" aria-hidden="true"></div>
+              </div>
+
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
       </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
-        <h3>LCPL</h3>
-        <p>Harsh Vats</p>
+      {% endfor %}
+
+    {% else %}
+      <div class="ranks-empty">
+        <p>No rank holders found for this session.</p>
       </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Thejas">
-        <h3>LCPL</h3>
-        <p>Thejas</p>
-      </div>
-      <div class="rank-card">
-        <img src="{{ url_for('static', filename='dress2.png') }}" alt="Amit Sanger">
-        <h3>LCPL</h3>
-        <p>Yashvardhan Rathore</p>
-      </div>
-    </div>
-  </section>
-{%endblock%}
+    {% endif %}
+  </main>
+
+</div>
+
+<script>
+  // ── Flip on click or Enter key ──────────────────────────
+  document.querySelectorAll('.flip-card').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.classList.toggle('flipped');
+      }
+    });
+  });
+
+  // ── Scroll reveal ───────────────────────────────────────
+  const rows = document.querySelectorAll('.reveal-rank');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.05 });
+
+  rows.forEach(row => {
+    if (row.getBoundingClientRect().top < window.innerHeight) {
+      row.classList.add('revealed');
+    } else {
+      io.observe(row);
+    }
+  });
+</script>
+{% endblock %}
