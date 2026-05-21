@@ -6,10 +6,21 @@ import os
 import json
 import re
 import tempfile
+import uuid
+from werkzeug.utils import secure_filename
 
 from datetime import datetime
 import json
 app = Flask(__name__)
+
+
+
+PHOTO_ALLOWED = {'.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic'}
+ 
+def get_session_photos_dir(session_id):
+    base = os.path.join(app.root_path, 'static', 'images', 'session_photos', str(session_id))
+    os.makedirs(base, exist_ok=True)
+    return base
 
 # ---- MySQL CONNECTION FUNCTION ----
 def get_db_connection():
@@ -184,10 +195,11 @@ def attendance_cadets():
  
  
 # ── GET SESSIONS FOR A MONTH ─────────────────────────────────
+
 @app.route('/attendance/sessions')
 def attendance_sessions():
-    year  = request.args.get('year',  '')   # calendar year e.g. "2025"
-    month = request.args.get('month', '')   # "1"–"12"
+    year  = request.args.get('year',  '')
+    month = request.args.get('month', '')
  
     if not year or not month:
         return jsonify([])
@@ -196,17 +208,21 @@ def attendance_sessions():
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         """
-        SELECT id, DATE_FORMAT(date,'%%Y-%%m-%%d') AS date, notes
-        FROM class_sessions
-        WHERE YEAR(date)=%s AND MONTH(date)=%s
-        ORDER BY date
+        SELECT cs.id,
+               DATE_FORMAT(cs.date,'%%Y-%%m-%%d') AS date,
+               cs.notes,
+               COUNT(sp.id) AS photo_count
+        FROM class_sessions cs
+        LEFT JOIN session_photos sp ON sp.session_id = cs.id
+        WHERE YEAR(cs.date)=%s AND MONTH(cs.date)=%s
+        GROUP BY cs.id, cs.date, cs.notes
+        ORDER BY cs.date
         """,
         (year, month)
     )
     sessions = cursor.fetchall()
     cursor.close(); conn.close()
     return jsonify(sessions)
- 
  
 # ── ADD A NEW SESSION DATE ───────────────────────────────────
 @app.route('/attendance/sessions/add', methods=['POST'])
@@ -243,6 +259,116 @@ def attendance_add_session():
     return jsonify({'id': session_id, 'date': date, 'notes': notes})
  
  
+
+
+
+
+# ── GET PHOTOS FOR A SESSION ─────────────────────────────────────
+@app.route('/attendance/sessions/<int:session_id>/photos')
+def get_session_photos(session_id):
+    conn   = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT id, filename, original_name, uploaded_at FROM session_photos WHERE session_id = %s ORDER BY uploaded_at ASC",
+        (session_id,)
+    )
+    rows = cursor.fetchall()
+    cursor.close(); conn.close()
+ 
+    photos = []
+    for row in rows:
+        url = f"/static/images/session_photos/{session_id}/{row['filename']}"
+        photos.append({
+            'id':            row['id'],
+            'filename':      row['original_name'] or row['filename'],
+            'url':           url,
+            'uploaded_at':   str(row['uploaded_at'])
+        })
+ 
+    return jsonify({'photos': photos})
+ 
+ 
+# ── UPLOAD PHOTOS FOR A SESSION ──────────────────────────────────
+@app.route('/attendance/sessions/<int:session_id>/photos/upload', methods=['POST'])
+def upload_session_photos(session_id):
+    files = request.files.getlist('photos')
+    if not files:
+        return jsonify({'error': 'No files uploaded'}), 400
+ 
+    # Verify session exists
+    conn   = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id FROM class_sessions WHERE id = %s", (session_id,))
+    if not cursor.fetchone():
+        cursor.close(); conn.close()
+        return jsonify({'error': 'Session not found'}), 404
+ 
+    photo_dir = get_session_photos_dir(session_id)
+    uploaded  = 0
+ 
+    for f in files:
+        if not f or not f.filename:
+            continue
+        ext = os.path.splitext(f.filename)[1].lower()
+        if ext not in PHOTO_ALLOWED:
+            continue
+ 
+        original_name = secure_filename(f.filename)
+        stored_name   = f"{uuid.uuid4().hex}{ext}"
+        f.save(os.path.join(photo_dir, stored_name))
+ 
+        cursor.execute(
+            "INSERT INTO session_photos (session_id, filename, original_name) VALUES (%s, %s, %s)",
+            (session_id, stored_name, original_name)
+        )
+        uploaded += 1
+ 
+    conn.commit()
+    cursor.close(); conn.close()
+ 
+    if uploaded == 0:
+        return jsonify({'error': 'No valid image files found'}), 400
+ 
+    return jsonify({'uploaded': uploaded})
+ 
+ 
+# ── DELETE A PHOTO ────────────────────────────────────────────────
+@app.route('/attendance/sessions/photos/<int:photo_id>', methods=['DELETE'])
+def delete_session_photo(photo_id):
+    conn   = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM session_photos WHERE id = %s", (photo_id,))
+    photo = cursor.fetchone()
+ 
+    if not photo:
+        cursor.close(); conn.close()
+        return jsonify({'error': 'Photo not found'}), 404
+ 
+    # Delete file
+    photo_path = os.path.join(
+        app.root_path, 'static', 'images', 'session_photos',
+        str(photo['session_id']), photo['filename']
+    )
+    try:
+        if os.path.exists(photo_path):
+            os.remove(photo_path)
+    except Exception as e:
+        pass  # File gone, still clean up DB
+ 
+    cursor.execute("DELETE FROM session_photos WHERE id = %s", (photo_id,))
+    conn.commit()
+    cursor.close(); conn.close()
+ 
+    return jsonify({'deleted': True})
+ 
+ 
+
+
+
+
+
+
+
 # ── GET EXISTING ATTENDANCE FOR ONE SESSION ──────────────────
 @app.route('/attendance/records')
 def attendance_records():
