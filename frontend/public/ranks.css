@@ -1,0 +1,299 @@
+/* ============================================================
+   RANKS PANEL — ranks-panel.css
+   Session switcher + flip cards
+   ============================================================ */
+
+:root {
+  --rp-bg:         #0a100a;
+  --rp-green-deep: #1a2e14;
+  --rp-green-mid:  #2a4820;
+  --rp-gold:       #c9a84c;
+  --rp-gold-light: #e8c76a;
+  --rp-text:       #e8e6d9;
+  --rp-muted:      #8a9478;
+  --rp-dim:        #4a5448;
+  --rp-glass:      rgba(26, 46, 20, 0.5);
+  --rp-border:     rgba(255, 255, 255, 0.09);
+  --font-display:  'Oswald', sans-serif;
+  --font-mono:     'Share Tech Mono', monospace;
+  --card-w:        168px;
+  --card-h:        260px;
+}
+
+/* ── PAGE ─────────────────────────────────────────────────── */
+.ranks-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(42,72,32,0.3) 0%, transparent 65%),
+    linear-gradient(180deg, #090e09 0%, #0a100a 100%);
+  color: var(--rp-text);
+  font-family: var(--font-display);
+}
+
+/* ── HEADER ───────────────────────────────────────────────── */
+.ranks-header {
+  position: relative;
+  padding: 3rem 2rem 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  overflow: hidden;
+}
+.ranks-header-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+.ranks-header-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+.ranks-eyebrow {
+  font-family: var(--font-mono); font-size: 0.68rem;
+  letter-spacing: 0.18em; color: var(--rp-gold); opacity: 0.75; margin-bottom: 0.3rem;
+}
+.ranks-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 700; letter-spacing: 0.07em; color: var(--rp-text); margin: 0; line-height: 1;
+}
+.ranks-subtitle {
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--rp-muted); letter-spacing: 0.08em; margin-top: 0.4rem;
+}
+
+/* ── SESSION BAR ──────────────────────────────────────────── */
+.session-bar-wrap {
+  background: rgba(10,16,10,0.85);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 57px; z-index: 50;
+}
+.session-bar {
+  max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+  display: flex; align-items: center; gap: 1.5rem; height: 52px;
+}
+.session-bar-label {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; color: var(--rp-dim); flex-shrink: 0;
+}
+.session-tabs { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; }
+.session-tabs::-webkit-scrollbar { display: none; }
+.session-tab {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 1rem; border-radius: 6px;
+  border: 1px solid var(--rp-border); background: transparent;
+  color: var(--rp-muted); text-decoration: none;
+  font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.08em;
+  white-space: nowrap; transition: all 0.22s ease;
+}
+.session-tab:hover {
+  background: var(--rp-glass); color: var(--rp-text);
+  border-color: rgba(201,168,76,0.25);
+}
+.session-tab.active {
+  background: rgba(42,72,32,0.7); border-color: var(--rp-gold);
+  color: var(--rp-gold-light); font-weight: 600;
+}
+.session-current-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #5cb85c;
+  flex-shrink: 0; box-shadow: 0 0 6px rgba(92,184,92,0.7);
+}
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+.ranks-main {
+  max-width: 1200px; margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+  display: flex; flex-direction: column; gap: 2.5rem;
+}
+
+/* ── RANK ROW ─────────────────────────────────────────────── */
+.rank-row-wrap {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.rank-row-wrap.revealed { opacity: 1; transform: translateY(0); }
+
+.rank-tier-label {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.1rem;
+}
+.rank-tier-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+}
+.rank-tier-name {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.22em; color: var(--rp-gold); opacity: 0.7; flex-shrink: 0;
+}
+
+.rank-cards-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 1.1rem;
+}
+
+/* ── FLIP CARD ────────────────────────────────────────────── */
+.flip-card {
+  width: var(--card-w);
+  height: var(--card-h);
+  perspective: 1000px;
+  cursor: pointer;
+  outline: none;
+  animation: cardSlideIn 0.4s ease calc(var(--i) * 60ms) both;
+}
+
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  border-radius: 12px;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* shared face styles */
+.flip-front,
+.flip-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  border: 1px solid var(--rp-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* ── FRONT ────────────────────────────────────────────────── */
+.flip-front {
+  background: var(--rp-glass);
+  backdrop-filter: blur(12px);
+  display: flex; flex-direction: column;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.flip-card:hover .flip-front {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(201,168,76,0.2);
+  border-color: rgba(201,168,76,0.28);
+}
+
+.rank-photo-wrap {
+  position: relative; height: 185px; overflow: hidden; flex-shrink: 0;
+}
+.rank-photo {
+  width: 100%; height: 100%; object-fit: cover;
+  object-position: top center; display: block;
+  transition: transform 0.45s ease;
+}
+.flip-card:hover .rank-photo { transform: scale(1.05); }
+.rank-photo-placeholder { filter: grayscale(0.3) opacity(0.85); }
+.rank-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(8,14,8,0.75) 100%);
+}
+
+.rank-info {
+  padding: 0.6rem 0.75rem 0.5rem;
+  display: flex; flex-direction: column; gap: 0.25rem;
+  align-items: center; text-align: center; flex: 1;
+}
+.rank-badge-pill {
+  display: inline-block; padding: 0.12rem 0.6rem; border-radius: 999px;
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.35);
+  color: var(--rp-gold-light); font-family: var(--font-mono);
+  font-size: 0.6rem; letter-spacing: 0.15em;
+}
+.rank-name {
+  font-family: var(--font-display); font-size: 0.92rem; font-weight: 600;
+  letter-spacing: 0.04em; color: var(--rp-text); margin: 0; line-height: 1.2;
+}
+
+/* "TAP TO REVEAL" hint */
+.flip-hint {
+  font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.18em;
+  color: var(--rp-dim); text-align: center; padding-bottom: 0.5rem;
+  opacity: 0; transition: opacity 0.25s ease;
+}
+.flip-card:hover .flip-hint { opacity: 1; }
+
+.rank-corner {
+  position: absolute; top: 0; right: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 0 28px 28px 0;
+  border-color: transparent rgba(201,168,76,0.18) transparent transparent;
+  transition: border-color 0.3s ease;
+}
+.flip-card:hover .rank-corner {
+  border-color: transparent rgba(201,168,76,0.45) transparent transparent;
+}
+
+/* ── BACK ─────────────────────────────────────────────────── */
+.flip-back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(42,72,32,0.6) 0%, transparent 70%),
+    linear-gradient(160deg, #0f1e0c 0%, #0a1208 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 1.1rem 0.9rem;
+  gap: 0;
+}
+
+.flip-back-glow {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Big rank circle */
+.back-rank-circle {
+  width: 62px; height: 62px; border-radius: 50%;
+  border: 1.5px solid var(--rp-gold);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 0 18px rgba(201,168,76,0.2), inset 0 0 12px rgba(201,168,76,0.06);
+}
+.back-rank-circle span {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+  color: var(--rp-gold-light); letter-spacing: 0.06em;
+}
+
+/* Info rows */
+.back-info { width: 100%; text-align: center; }
+.back-label {
+  font-family: var(--font-mono); font-size: 0.55rem;
+  letter-spacing: 0.18em; color: var(--rp-dim);
+  margin: 0 0 0.2rem;
+}
+.back-value {
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
+  color: var(--rp-text); letter-spacing: 0.03em;
+  margin: 0; line-height: 1.2;
+}
+
+.back-corner {
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 28px 0 0 28px;
+  border-color: transparent transparent transparent rgba(201,168,76,0.15);
+}
+
+/* ── EMPTY ────────────────────────────────────────────────── */
+.ranks-empty {
+  text-align: center; padding: 4rem 2rem;
+  color: var(--rp-muted); font-family: var(--font-mono);
+  font-size: 0.85rem; letter-spacing: 0.1em;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  :root { --card-w: 145px; --card-h: 240px; }
+  .ranks-header { padding: 2rem 1rem 1.5rem; }
+  .ranks-main   { padding: 1.5rem 1rem 3rem; }
+  .session-bar  { padding: 0 1rem; }
+  .rank-photo-wrap { height: 160px; }
+}
